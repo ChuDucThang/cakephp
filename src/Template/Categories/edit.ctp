@@ -7,15 +7,15 @@
  			<?= $this->Form->control('name')?>
 	    </div>
 	    <div class="form-group col-md-6">
-	     	<?= $this->Form->control('status')?>
+	     	<?= $this->Form->control('status') ?>
 	    </div>
 	    <div class="form-group col-md-6">
-	     	<?php echo $this->Form->control('created_at',['type' => 'date', 'class'=>'form-control'])?>
+	     	<?= $this->Form->input('created_at',['class'=>'form-control']) ?>
 	    </div>
 	    <div>
-			<?= $this->Form->button(__('Submit')) ?>
+			<?= $this->Form->button(__('Submit',['class'=>'btn btn-danger'])) ?>
 			<a href="<?= $this->Url->build(['action'=>'index'])?>" class="btn btn-info">Back</a>
 		</div>
 	<!-- </form> -->
 	<?= $this->Form->end() ?>
-</div>
+</div>`
