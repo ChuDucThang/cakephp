@@ -2,19 +2,18 @@
     Thông tin category
 </div>
 <div class="users view large-9 medium-8 columns content" style="margin-top:50px;">
+	<?= $this->Form->create($cat, ['type' => 'file']); ?>
 	    <div class="form-group col-md-6">
-	      <label for="usr">Name:</label>
-	      <input type="text" class="form-control" value="<?= $cat->name ?>">
+ 			<?= $this->Form->input('name')?>
 	    </div>
 	    <div class="form-group col-md-6">
-	      <label for="pwd">Status</label>
-	      <input type="text" class="form-control" value="<?= $cat->status ?>">
+	     	<?= $this->Form->input('status') ?>
 	    </div>
 	    <div class="form-group col-md-6">
-	      <label for="pwd">Created_at</label>
-	      <input type="date" class="form-control" value="<?= $cat->created_at ?>">
+	     	<?= $this->Form->input('created_at',['class'=>'form-control']) ?>
 	    </div>
 	    <div>
 			<a href="<?= $this->Url->build(['action'=>'index'])?>" class="btn btn-info">Back</a>
 		</div>
+	<?= $this->Form->end() ?>
 </div>

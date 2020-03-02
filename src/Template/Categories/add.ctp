@@ -1,20 +1,25 @@
 <div type="button" class="btn btn-secondary" data-placement="" title="">
-    Them category
+    Thêm category
 </div>
 <div class="users view large-9 medium-8 columns content" style="margin-top:50px;">
 	<?= $this->Form->create(); ?>
-	<form  method="post" enctype="multipart/form-data">
 	    <div class="form-group col-md-6">
- 			<?= $this->Form->control('name')?>
+ 			<?= $this->Form->input('name',['class'=>'form-control'])?>
 	    </div>
+	    <div class="invalid-feedback">
+		    <?php echo $validator['name']; ?>
+		</div>
 	    <div class="form-group col-md-6">
-	     	<?= $this->Form->control('status')?>
+	     	<?= $this->Form->input('status',['type' => 'number','class'=>'form-control'])?>
 	    </div>
+	   	<div class="invalid-feedback">
+		    <?php echo $validator['status']; ?>
+		</div>
 	    <div class="form-group col-md-6">
-	     	<?= $this->Form->date('created_at')?>
+	     	<?= $this->Form->input('created_at',['type' => 'date', 'class'=>'form-control'])?>
 	    </div>
 	    <div>
-			<?= $this->Form->button(__('Submit')) ?>
+			<?= $this->Form->button('Submit',['class'=>'btn btn-primary']) ?>
 			<a href="<?= $this->Url->build(['action'=>'index'])?>" class="btn btn-info">Back</a>
 		</div>
 	<!-- </form> -->

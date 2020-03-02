@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
-// use Cake\ORM\TableRegistry; 
+use Cake\Validation\Validator;
+use Cake\ORM\TableRegistry; 
 /**
  * 
  */
@@ -31,16 +32,23 @@ class CategoriesController extends AppController
 	}
 
 	public function add(){
+		$validator = new Validator();
 		$cat = $this->Categories->newEntity();
 		if ($this->request->is('post')) {
 			$cat = $this->Categories->patchEntity($cat, $this->request->getData());
-			if ($this->Categories->save($cat)) {
-				$this->Flash->success(__('The category saved.'));
-				return $this->redirect(['action' => 'index']);
+			if ($cat->errors()) {
+				$validator = [
+					'name' => $cat->errors('name'),
+					'status' => $cat->errors('status'),
+				];
+				print_r($validator);
 			}else{
-				$this->Flash->error(__('The product could not be saved. Please, try again.'));
+				$this->Categories->save($cat);
+				$this->Flash->success('The category has been saved.');
+				return $this->redirect(['action' => 'index']);
 			}
 		}
+		$this->set('validator', $validator); 
 	}
 
 	public function edit($id = null)
@@ -55,7 +63,7 @@ class CategoriesController extends AppController
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            $this->Flash->error(__('The category could not be saved. Please, try again.'));
         }
         $this->set(compact('cat'));
     }
@@ -65,9 +73,9 @@ class CategoriesController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $cat = $this->Categories->get($id);
         if ($this->Categories->delete($cat)) {
-            $this->Flash->success(__('The user has been deleted.'));
+            $this->Flash->success(__('The category has been deleted.'));
         } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            $this->Flash->error(__('The category could not be deleted. Please, try again.'));
         }
 
         return $this->redirect(['action' => 'index']);

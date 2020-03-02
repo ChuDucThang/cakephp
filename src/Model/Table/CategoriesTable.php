@@ -49,18 +49,26 @@ class CategoriesTable extends Table
 
         $validator
             ->scalar('name')
-            ->maxLength('name', 50)
+            ->add('name',
+                [ 
+                    'minLength'=>[
+                        'rule' => ['minLength',6],
+                        'message' =>'Bạn phải nhập tối thiểu 6 ký tự'
+                    ],
+                    'maxlength' =>[
+                        'rule' => ['maxlength',50],
+                        'message' =>'Bạn được nhập tối đa 50 ký tự'
+                    ]
+            ])
             ->requirePresence('name', 'create')
-            ->notEmptyString('name');
+            ->notEmptyString('name','Bạn không được để trống',false);
 
         $validator
             ->requirePresence('status', 'create')
-            ->notEmptyString('status');
+            ->notEmptyString('status','Bạn không được để trống');
 
         $validator
-            ->date('created_at')
-            ->requirePresence('created_at', 'create')
-            ->notEmptyDate('created_at');
+            ->date('created_at');
 
         return $validator;
     }

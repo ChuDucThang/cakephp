@@ -22,7 +22,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/categories/add', ['controller' => 'Categories', 'action' => 'add']); 
     $routes->connect('/categories/view/*', ['controller' => 'Categories', 'action' => 'view']); 
     $routes->connect('/categories/edit/*', ['controller' => 'Categories', 'action' => 'edit']); 
-    $routes->connect('/categories/delete', ['controller' => 'Categories', 'action' => 'delete']); 
+    $routes->connect('/categories/delete/*', ['controller' => 'Categories', 'action' => 'delete']); 
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
