@@ -8,6 +8,8 @@
   <?= $this->Html->css('bootstrap.min.css')?>
 
   <?= $this->Html->css('font-awesome.min.css')?>
+  <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <body>
   <div class="main">
@@ -15,26 +17,9 @@
 <center>
   <div class="middle">
       <div id="login">
+         <?= $this->Flash->render() ?>
 
-        <form action="javascript:void(0);" method="get">
-
-          <fieldset class="clearfix">
-
-            <p ><span class="fa fa-user"></span><input type="text"  Placeholder="Username" required></p> <!-- JS because of IE support; better: placeholder="Username" -->
-            <p><span class="fa fa-lock"></span><input type="password"  Placeholder="Password" required></p> <!-- JS because of IE support; better: placeholder="Password" -->
-            
-             <div>
-                                <span style="width:48%; text-align:left;  display: inline-block;"><a class="small-text" href="#">Forgot
-                                password?</a></span>
-                                <!-- <span style="width:50%; text-align:right;  display: inline-block;"><input type="submit" value="Sign In"></span> -->
-                            </div>
-            <div>
-              <a class="btn btn-success" href="<?= $this->Url->build(['controller'=>'Dashboard','action'=>'index']) ?>">Login</a>
-            </div>
-
-          </fieldset>
-          <div class="clearfix"></div>
-        </form>
+        <?= $this->fetch('content') ?>
 
         <div class="clearfix"></div>
 

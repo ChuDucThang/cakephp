@@ -2,6 +2,7 @@
     DANH SÁCH USER
 </div>
 <a href="" class="btn btn-success">ADD user</a>
+<?= $this->Html->link('Logout',['action' => 'logout']) ?>
 <table class="table table-striped table-bordered table-hover">
   <thead>
     <tr>
