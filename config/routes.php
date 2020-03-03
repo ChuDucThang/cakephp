@@ -15,13 +15,14 @@ Router::scope('/', function (RouteBuilder $routes) {
 
     $routes->connect('/', ['controller' => 'Dashboard', 'action' => 'index', 'index']);
 
-    $routes->connect('home', ['controller' => 'Pages', 'action' => 'display', 'home']);
+    $routes->connect('home/', ['controller' => 'Pages', 'action' => 'display', 'home']);
 
     $routes->connect('users/*', ['controller' => 'Users', 'action' => 'index', 'index']);
     $routes->connect('users/add', ['controller' => 'Users', 'action' => 'add', ]);
     $routes->connect('users/edit/*', ['controller' => 'Users', 'action' => 'edit']);
     $routes->connect('users/delete/*', ['controller' => 'Users', 'action' => 'delete']);
     $routes->connect('users/login', ['controller' => 'Users', 'action' => 'login']);
+    $routes->connect('users/logout', ['controller' => 'Users', 'action' => 'logout']);
     $routes->connect('users/register', ['controller' => 'Users', 'action' => 'register']);
     $routes->connect('users/verification', ['controller' => 'Users', 'action' => 'verification', 'verification']);
     $routes->connect('users/forgot-password', ['controller' => 'Users', 'action' => 'forgot-password']);

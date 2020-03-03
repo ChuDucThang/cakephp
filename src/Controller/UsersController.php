@@ -19,6 +19,7 @@ class UsersController extends AppController
 {
     public function beforeFilter(Event $event){
         $this->viewBuilder()->setLayout('dashboard');
+        $this->Authentication->allowUnauthenticated(['login','register','verification','logout']);
 
     }
     /**
@@ -113,18 +114,19 @@ class UsersController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-    public function login(){
-         $this->viewBuilder()->setLayout('login');
-        if ($this->request->is('post')) {
-            $users = $this->Auth->identify();
-            if ($users) {
-                $this->Auth->setUser($users);
-                return $this->redirect($this->Auth->redirectUrl());
-            }
-
-            $this->Flash->error('Your username or password is correct');
+    public function login()
+    {
+        $this->viewBuilder()->setLayout('login');
+        $result = $this->Authentication->getResult();
+        // debug($result);
+        // If the user is logged in send them away.
+        if ($result->isValid()) {
+            $target = $this->Authentication->getLoginRedirect() ?? '/dashboard';
+            return $this->redirect($target);
         }
-
+        if ($this->request->is('post') && !$result->isValid()) {
+            $this->Flash->error('Invalid username or password');
+        }
     }
 
     public function register(){
@@ -135,7 +137,7 @@ class UsersController extends AppController
 
             $hasher = new DefaultPasswordHasher();
             $myusername = $this->request->getData('username');
-            $mypassword = Security::hash($this->request->getData('password'), 'sha256', false);
+            $mypassword = $this->request->getData('password');
             $myimage = $this->request->getData('image');
             $myfullname = $this->request->getData('fullname');
             $myphone = $this->request->getData('phone');
@@ -177,7 +179,7 @@ class UsersController extends AppController
                 ->from('testemailsaishunkan@gmail.com','Admin')
                 ->subject('Please confirm your email to activition your account')
                 ->to($myemail)
-                ->send('Hi' .$myfullname. '<br/>Please confirm your email link bellow</br/><a href="http://localhost/cakephp/users/verification"'.$mytoken.'>Verification Email</a>');
+                ->send('Hi' .$myfullname. '<br/>Please confirm your email link bellow</br/><a href="http://localhost.local/users/verification"'.$mytoken.'>Verification Email</a>');
 
             }else{
                 $this->Flash->error('Fail.');
@@ -188,6 +190,16 @@ class UsersController extends AppController
 
 
     public function verification(){
+        $this->viewBuilder()->setLayout('login');
+    }
 
+    public function logout()
+    {
+        $this->Authentication->logout();
+        return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+    }
+
+    public function forgot_password(){
+         $this->viewBuilder()->setLayout('login');
     }
 }

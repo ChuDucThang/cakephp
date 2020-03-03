@@ -28,6 +28,7 @@ use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Cake\Utility\Security;
 
 /**
  * Application setup class.
@@ -46,6 +47,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         parent::bootstrap();
         
         $this->addPlugin('Authentication');
+
         if (PHP_SAPI === 'cli') {
             $this->bootstrapCli();
         }
@@ -62,7 +64,15 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         // Load Authentication
     }
 
-    public function getAuthenticationService(ServerRequestInterface $request, ResponseInterface $response){
+    /**
+     * Returns a service provider instance.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request
+     * @param \Psr\Http\Message\ResponseInterface $response Response
+     * @return \Authentication\AuthenticationServiceInterface
+     */
+    public function getAuthenticationService(ServerRequestInterface $request, ResponseInterface $response)
+    {
         $service = new AuthenticationService();
         $service->setConfig([
             'unauthenticatedRedirect' => '/users/login',
@@ -70,37 +80,52 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         ]);
 
         $fields = [
-            'username' => 'email',
+            'username' => 'username',
             'password' => 'password'
         ];
 
-        // load indifity
-        $service->loadIdentifier('Authentication.Password', compact('fields'));
+        // Load identifiers
+        $service->loadIdentifier('Authentication.Password', [
+            'fields' => [
+                'username' => 'email',
+                'password' => 'password'
+            ],
+            'passwordHasher' => [
+                'className' => 'Authentication.Fallback',
+                'hashers' => [
+                    'Authentication.Default',
+                    [
+                        'className' => 'Authentication.Legacy',
+                        'hashType' => 'md5'
+                    ],
+                ]
+            ]
+        ]);
 
+        // Load the authenticators, you want session first
         $service->loadAuthenticator('Authentication.Session');
         $service->loadAuthenticator('Authentication.Form', [
             'fields' => $fields,
             'loginUrl' => '/users/login'
         ]);
-
         return $service;
     }
+
     /**
      * Setup the middleware queue your application will use.
      *
-     * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue to setup.
+     * @param \Cake\Http\MiddlewareQueue $middlewareQueue The middleware queue.
      * @return \Cake\Http\MiddlewareQueue The updated middleware queue.
      */
     public function middleware($middlewareQueue)
-    {
-        $authentication = new AuthenticationMiddleware($this);
+        {
+            $middlewareQueue
+            ->add(new AuthenticationMiddleware($this))
+            ->add(new RoutingMiddleware($this));
 
-        $middlewareQueue->add($authentication);
-
-        return $middlewareQueue;
-    }
-
-    /**
+            return $middlewareQueue;
+        }
+        /**
      * @return void
      */
     protected function bootstrapCli()

@@ -46,12 +46,9 @@ class AppController extends Controller
         ]);
         $this->loadComponent('Flash');
 
-        $this->loadComponent('Authentication.Authentication', [
-            'loginRedirect' => '/users/login'
-        ]);
-        // $this->Authentication->allowUnauthenticated(['index']);
+       $this->loadComponent('Authentication.Authentication');
 
-
+       $this->Authentication->allowUnauthenticated(['home']);
 
         /*
          * Enable the following component for recommended CakePHP security settings.
@@ -59,4 +56,5 @@ class AppController extends Controller
          */
         //$this->loadComponent('Security');
     }
+
 }
