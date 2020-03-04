@@ -20,6 +20,7 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Utility\Security;
 
 
 // Authentication
@@ -28,7 +29,6 @@ use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Cake\Utility\Security;
 
 /**
  * Application setup class.
@@ -87,7 +87,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         // Load identifiers
         $service->loadIdentifier('Authentication.Password', [
             'fields' => [
-                'username' => 'email',
+                'username' => 'username',
                 'password' => 'password'
             ],
             'passwordHasher' => [

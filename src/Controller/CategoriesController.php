@@ -17,8 +17,14 @@ class CategoriesController extends AppController
     }
 
 	public function index(){
-		$cats = $this->paginate($this->Categories);
-		$this->set(compact('cats'));
+        if ($this->request->session()->read('Auth.level') == 1 || $this->request->session()->read('Auth.level') == 2) {
+            $cats = $this->paginate($this->Categories);
+            $this->set(compact('cats'));
+        }else{
+            $this->Flash->error(__('Nhân viên không có quyền truy cập chức năng này.'));
+            return $this->redirect(['controller' => 'Dashboard', 'action' => 'index']);
+        }
+
 
 	}
 
@@ -37,18 +43,13 @@ class CategoriesController extends AppController
 		if ($this->request->is('post')) {
 			$cat = $this->Categories->patchEntity($cat, $this->request->getData());
 			if ($cat->errors()) {
-				$validator = [
-					'name' => $cat->errors('name'),
-					'status' => $cat->errors('status'),
-				];
-				print_r($validator);
+                $this->Flash->error('Không được để trống');
 			}else{
 				$this->Categories->save($cat);
 				$this->Flash->success('The category has been saved.');
 				return $this->redirect(['action' => 'index']);
 			}
 		}
-		$this->set('validator', $validator); 
 	}
 
 	public function edit($id = null)

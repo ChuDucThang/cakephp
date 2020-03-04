@@ -10,7 +10,10 @@
 		    <?php echo $validator['name']; ?>
 		</div>
 	    <div class="form-group col-md-6">
-	     	<?= $this->Form->input('status',['type' => 'number','class'=>'form-control'])?>
+	     	<select name="status" class="form-control">
+	     		<option value="0">Hiển thị</option>
+	     		<option value="1">Không hiển thị</option>
+	     	</select>
 	    </div>
 	   	<div class="invalid-feedback">
 		    <?php echo $validator['status']; ?>

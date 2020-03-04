@@ -28,7 +28,7 @@
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./typography.html">
+            <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Products','action' => 'index']); ?>">
               <i class="material-icons">library_books</i>
               <p>Product</p>
             </a>

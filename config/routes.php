@@ -15,17 +15,20 @@ Router::scope('/', function (RouteBuilder $routes) {
 
     $routes->connect('/', ['controller' => 'Dashboard', 'action' => 'index', 'index']);
 
-    $routes->connect('home/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+    $routes->connect('home/', ['controller' => 'Pages', 'action' => 'home', 'home']);
 
     $routes->connect('users/*', ['controller' => 'Users', 'action' => 'index', 'index']);
     $routes->connect('users/add', ['controller' => 'Users', 'action' => 'add', ]);
+    $routes->connect('users/view/*', ['controller' => 'Users', 'action' => 'view', ]);
     $routes->connect('users/edit/*', ['controller' => 'Users', 'action' => 'edit']);
     $routes->connect('users/delete/*', ['controller' => 'Users', 'action' => 'delete']);
     $routes->connect('users/login', ['controller' => 'Users', 'action' => 'login']);
     $routes->connect('users/logout', ['controller' => 'Users', 'action' => 'logout']);
     $routes->connect('users/register', ['controller' => 'Users', 'action' => 'register']);
     $routes->connect('users/verification', ['controller' => 'Users', 'action' => 'verification', 'verification']);
-    $routes->connect('users/forgot-password', ['controller' => 'Users', 'action' => 'forgot-password']);
+    $routes->connect('users/forgotpassword', ['controller' => 'Users', 'action' => 'forgotpassword']);
+    $routes->connect('users/profile', ['controller' => 'Users', 'action' => 'profile']);
+    $routes->connect('users/updateprofile/*', ['controller' => 'Users', 'action' => 'updateprofile']);
 
 
 
@@ -43,6 +46,11 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/customer/add', ['controller' => 'Customers', 'action' => 'add']); 
     $routes->connect('/customer/edit/*', ['controller' => 'Customers', 'action' => 'edit']); 
     $routes->connect('/customer/delete/*', ['controller' => 'Customers', 'action' => 'delete']); 
+
+    $routes->connect('/products', ['controller' => 'Products', 'action' => 'index']);  
+    $routes->connect('/products/add', ['controller' => 'Products', 'action' => 'add']); 
+    $routes->connect('/products/edit/*', ['controller' => 'Products', 'action' => 'edit']); 
+    $routes->connect('/products/delete/*', ['controller' => 'Products', 'action' => 'delete']); 
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.

@@ -19,7 +19,7 @@ class UsersController extends AppController
 {
     public function beforeFilter(Event $event){
         $this->viewBuilder()->setLayout('dashboard');
-        $this->Authentication->allowUnauthenticated(['login','register','verification','logout']);
+        $this->Authentication->allowUnauthenticated(['login','register','verification','logout', 'forgotpassword' ]);
 
     }
     /**
@@ -29,9 +29,14 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $users = $this->paginate($this->Users);
+        if ($this->request->session()->read('Auth.level') == 1 || $this->request->session()->read('Auth.level') == 2) {
+            $users = $this->paginate($this->Users);
 
-        $this->set(compact('users'));
+            $this->set(compact('users'));
+        }else{
+            $this->Flash->error(__('Nhân viên không có quyền truy cập chức năng này.'));
+            return $this->redirect(['controller' => 'Dashboard', 'action' => 'index']);
+        }
     }
 
     /**
@@ -60,12 +65,15 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+            if ($this->request->session()->read('Auth.level') == 1) {
+                if ($this->Users->save($user)) {
+                    $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['action' => 'index']);
+                }
+                $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+             $this->Flash->error(__('Admin mới có quyền thực hiện chức năng này'));
         }
         $this->set(compact('user'));
     }
@@ -118,7 +126,7 @@ class UsersController extends AppController
     {
         $this->viewBuilder()->setLayout('login');
         $result = $this->Authentication->getResult();
-        // debug($result);
+        
         // If the user is logged in send them away.
         if ($result->isValid()) {
             $target = $this->Authentication->getLoginRedirect() ?? '/dashboard';
@@ -144,13 +152,13 @@ class UsersController extends AppController
             $myaddress = $this->request->getData('address');
             $myemail = $this->request->getData('email');
             $mylevel = $this->request->getData('level');
-            $mystatus = $this->request->getData('status');
+            $mystatus = 1;
             $mycreated = date('Y-m-d',time());
             $myupdated = date('Y-m-d',time());
             $mytoken = Security::hash(random_bytes(32));
 
             $user->username = $myusername;
-            $user->password = $hasher->hash($mypassword);
+            $user->password = $hasher->hash($mypassword,'md5',false);
             $user->image = $myimage;
             $user->fullname = $myfullname;
             $user->phone = $myphone;
@@ -199,7 +207,38 @@ class UsersController extends AppController
         return $this->redirect(['controller' => 'Users', 'action' => 'login']);
     }
 
-    public function forgot_password(){
+    public function forgotpassword(){
          $this->viewBuilder()->setLayout('login');
+         // if ($this->request->is('post') {
+         //     $myemail = $this->request->getData('email');
+
+         //     $userTable = TableRegistry::get('Users');
+         //     $user = $userTable->find('all')->where(['password' => $mypass])->first();
+         // }
+    }
+
+    public function profile(){
+        $id = $this->request->session()->read('Auth.id');
+
+        $profile = $this->paginate($this->Users->find()->where(['Users.id' => $id]));
+        $this->set('profile', $profile);
+    }
+
+    public function updateprofile($id){
+
+          $profile = $this->Users->get($id, [
+            'contain' => [],
+        ]);
+           if ($this->request->is(['patch', 'post', 'put'])) {
+            $profile = $this->Users->patchEntity($profile, $this->request->getData());
+            if ($this->Users->save($profile)) {
+                $this->Flash->success(__('Updated profile.'));
+
+                return $this->redirect(['action' => 'profile']);
+            }
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+        }
+        $this->set(compact('profile'));
+
     }
 }
