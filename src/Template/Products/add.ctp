@@ -1,22 +1,22 @@
 <div type="button" class="btn btn-secondary" data-placement="" title="">
-    Thêm category
+    Thêm PRODUCT
 </div>
 <div class="users view large-9 medium-8 columns content" style="margin-top:50px;">
-    <?= $this->Form->create(); ?>
+    <?= $this->Form->create($product); ?>
         <div class="form-group col-md-6">
-            <?= $this->Form->control('name',['class'=>'form-control'])?>
+            <?= $this->Form->control('name',['class'=>'form-control', 'required' => false])?>
         </div>
         <div class="form-group col-md-6">
-            <?= $this->Form->control('cat_id',['class'=>'form-control'])?>
+            <?= $this->Form->control('cat_id',['label'=>'Category','class'=>'form-control'])?>
         </div>
          <div class="form-group col-md-6">
-            <?= $this->Form->control('image',['class'=>'form-control'])?>
+            <?= $this->Form->control('image',['class'=>'form-control', 'required' => false])?>
         </div>
          <div class="form-group col-md-6">
-            <?= $this->Form->control('description',['class'=>'form-control'])?>
+            <?= $this->Form->control('description',['class'=>'form-control', 'required' => false])?>
         </div>
         <div class="form-group col-md-6">
-            <?= $this->Form->control('price',['class'=>'form-control'])?>
+            <?= $this->Form->control('price',['class'=>'form-control', 'required' => false])?>
         </div>
         <div class="form-group col-md-6">
             <select name="status" class="form-control">

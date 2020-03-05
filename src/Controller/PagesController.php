@@ -18,7 +18,8 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
-
+use Cake\ORM\TableRegistry;
+use Cake\Event\Event;
 /**
  * Static content controller
  *
@@ -28,6 +29,17 @@ use Cake\View\Exception\MissingTemplateException;
  */
 class PagesController extends AppController
 {
+     public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Cart');
+    }
+
+    public function beforeFilter(Event $event){
+        $this->Authentication->allowUnauthenticated(['home', 'viewcart','addcart','clear']);
+
+    }
+    /**
 
     /**
      * Displays a view
@@ -38,8 +50,45 @@ class PagesController extends AppController
      * @throws \Cake\Http\Exception\NotFoundException When the view file could not
      *   be found or \Cake\View\Exception\MissingTemplateException in debug mode.
      */
-    public function home(...$path)
+    public function home()
     {
-       
+        $product = TableRegistry::get('Products')->find();
+        $this->set(compact('product'));
+
+    }
+
+    public function addcart(){
+        $this->loadModel('Products');
+        $id = $this->request->data['id'];
+        $product = $this->Products->get($id, [
+                'contain' => []
+            ]);
+        $quantity = 1;
+        if(empty($product)) {
+                $this->Flash->error('Gio hang bi loi');
+            } else {
+                $this->Cart->addcart($id, $quantity);
+                $this->Flash->success($product->name . ' has been added to the shopping cart');
+                return $this->redirect(['action' => 'home']);
+            }
+    }
+
+    public function viewcart(){
+        $cart = $this->Cart->cart();
+        $this->set(compact('cart'));
+    }
+
+    public function deletecart($id = null){
+        $cart = $this->Cart->deletecart($id);
+         if(!empty($cart)) {
+            $this->Flash->error($cart['name'] . ' was removed from your shopping cart');
+        }
+        return $this->redirect(['action' => 'viewcart']);
+    }
+
+    public function clear(){
+        $this->Cart->deleteall();
+        $this->Flash->success('Xóa hết giỏ hàng');
+        return $this->redirect(['action' => 'home']);
     }
 }

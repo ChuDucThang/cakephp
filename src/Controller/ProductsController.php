@@ -44,7 +44,8 @@ class ProductsController extends AppController
         $product = $this->Products->get($id, [
             'contain' => ['Categories'],
         ]);
-        $this->set('product', $product);
+        $cats = $this->Products->Categories->find('list', ['limit' => 200]);
+        $this->set(compact('product', 'cats'));
     }
 
     /**

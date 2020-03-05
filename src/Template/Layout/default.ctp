@@ -27,17 +27,40 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
     <?= $this->Html->meta('icon') ?>
 
     <!-- <?= $this->Html->css('base.css') ?> -->
-    <?= $this->Html->css('font-awesome.min.css') ?>
+   <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- CSS Files -->
     <?= $this->Html->css('bootstrap.min.css') ?>
-    <!-- <?= $this->Html->css('style.css') ?> -->
+    <?= $this->Html->css('material-dashboard.css') ?>
 
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
+    <style type="text/css">
+      .icon-cart{
+        font-size: 30px;
+        position: relative;
+        z-index: 1;
+      }
+      .number-cart{
+        position: absolute;
+        z-index: 2;
+        background:red;
+        width: 22px;
+        top: 14px;
+        border-radius: 15px;
+        right: 315px;
+        text-align: center;
+        height: 22px;
+        color:
+        white;
+        font-size: 12px;
+      }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
+  <a class="navbar-brand" href="#">Page Book</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -45,10 +68,13 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="<?= $this->Url->build(['action' => 'home']) ?>">Home<span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="#">Category</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Product</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -61,12 +87,10 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
           <a class="dropdown-item" href="#">Something else here</a>
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <a href="<?= $this->Url->build(['controller' => 'Pages', 'action' => 'viewcart']) ?>" style="margin-right: 20px;"><i class="fa fa-shopping-cart icon-cart"></i><span class="number-cart">2</span></a>
+      <input class="form-control mr-sm-2" type="search" style="padding-right: 40px;" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
   </div>

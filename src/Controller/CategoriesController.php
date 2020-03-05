@@ -42,14 +42,12 @@ class CategoriesController extends AppController
 		$cat = $this->Categories->newEntity();
 		if ($this->request->is('post')) {
 			$cat = $this->Categories->patchEntity($cat, $this->request->getData());
-			if ($cat->errors()) {
-                $this->Flash->error('Không được để trống');
-			}else{
-				$this->Categories->save($cat);
-				$this->Flash->success('The category has been saved.');
-				return $this->redirect(['action' => 'index']);
+			if ($this->Categories->save($cat)) {
+                $this->Flash->success('The category has been saved.');
+                return $this->redirect(['action' => 'index']);              
 			}
 		}
+        $this->set(compact('cat'));
 	}
 
 	public function edit($id = null)

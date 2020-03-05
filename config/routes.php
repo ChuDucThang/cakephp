@@ -52,6 +52,10 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/products/edit/*', ['controller' => 'Products', 'action' => 'edit']); 
     $routes->connect('/products/delete/*', ['controller' => 'Products', 'action' => 'delete']); 
 
+    $routes->connect('/addcart/*', ['controller' => 'Pages', 'addcart' => 'add']); 
+    $routes->connect('/viewcart/*', ['controller' => 'Pages', 'viewcart' => 'edit']); 
+    $routes->connect('/deletecart/*', ['controller' => 'Pages', 'deletecart' => 'delete']); 
+
     /**
      * ...and connect the rest of 'Pages' controller's URLs.
      */

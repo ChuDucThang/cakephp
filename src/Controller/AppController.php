@@ -48,7 +48,6 @@ class AppController extends Controller
 
        $this->loadComponent('Authentication.Authentication');
 
-       $this->Authentication->allowUnauthenticated(['home']);
 
         /*
          * Enable the following component for recommended CakePHP security settings.

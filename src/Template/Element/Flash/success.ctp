@@ -6,7 +6,7 @@ if (!isset($params['escape']) || $params['escape'] !== false) {
 
  <div class="alert alert-success">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <i class="material-icons">close</i>
+        <i class="fa fa-times"></i>
     </button>
     <span><?= $message ?></span>
 </div>

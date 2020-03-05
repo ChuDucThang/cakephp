@@ -37,8 +37,7 @@ class ProductsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->belongsTo('Categories', [
-            'foreignKey' => 'id',
-            'joinType' => 'INNER',
+            'foreignKey' => 'id'
         ]);
     }
 
@@ -58,24 +57,24 @@ class ProductsTable extends Table
             ->scalar('name')
             ->maxLength('name', 255)
             ->requirePresence('name', 'create')
-            ->notEmptyString('name');
+            ->notEmptyString('name', 'Không được để trống');
 
         $validator
             ->scalar('image')
             ->maxLength('image', 500)
             ->requirePresence('image', 'create')
-            ->notEmptyFile('image');
+            ->notEmptyFile('image', 'Không được để trống');
 
         $validator
             ->scalar('description')
             ->maxLength('description', 4294967295)
             ->requirePresence('description', 'create')
-            ->notEmptyString('description');
+            ->notEmptyString('description', 'Không được để trống');
 
         $validator
             ->numeric('price')
             ->requirePresence('price', 'create')
-            ->notEmptyString('price');
+            ->notEmptyString('price', 'Không được để trống');
 
         $validator
             ->requirePresence('status', 'create')
