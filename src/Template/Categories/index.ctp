@@ -22,7 +22,7 @@
       <td>
           <a href="<?= $this->Url->build(['action' => 'view', $c->id]) ?>" class="btn btn-primary">View</a>
           <a href="<?= $this->Url->build(['action' => 'edit', $c->id]) ?>" class="btn btn-info">Edit</a>
-          <?= $this->Form->postLink('Delete', ['action' => 'delete', $c->id],['class'=>'btn btn-danger'] ,['confirm' => __('Are you sure you want to delete # {0}?', $c->id)]); ?>
+          <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $c->id],['class'=>'btn btn-danger', 'confirm' => __('Are you sure you want to delete # {0}?', $c->id)]) ?>
       </td>
     </tr>
     <?php endforeach;?>

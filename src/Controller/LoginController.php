@@ -23,15 +23,15 @@ class LoginController extends AppController
 		 // $this->loadModel('Users');
 		$users = TableRegistry::get('Users');
 
-		if ($this->request->is('post')) {
-			$users = $this->Auth->identify();
-			if ($users) {
-				$this->Auth->setUser($users);
-				return $this->redirect($this->Auth->redirectUrl());
-			}
+		// if ($this->request->is('post')) {
+		// 	$users = $this->Auth->identify();
+		// 	if ($users) {
+		// 		$this->Auth->setUser($users);
+		// 		return $this->redirect($this->Auth->redirectUrl());
+		// 	}
 
-			$this->Flash->error('Your username or password is correct');
-		}
+		// 	$this->Flash->error('Your username or password is correct');
+		// }
 		// $first = $this->Users->find('all')->order('Users.id DESC');
 		// var_dump($users);
 

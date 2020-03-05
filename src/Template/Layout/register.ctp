@@ -40,12 +40,13 @@
 		<div class="form-group">
 			<?= $this->Form->input('email',['class' => 'form-control']) ?>
 		</div>
-		<div class="form-group">
-			<?= $this->Form->input('level',['type' => 'number', 'class' => 'form-control']) ?>
-		</div>
-		<div class="form-group">
-			<?= $this->Form->input('status',['type' => 'number','class' => 'form-control']) ?>
-		</div>
+		 <div class="form-group">
+		    <label for="exampleFormControlSelect1">Level</label>
+		    <select class="form-control" name="level" id="exampleFormControlSelect1">
+		      <option value="2">Thủ thư</option>
+		      <option value="3">Nhân viên</option>
+		    </select>
+		 </div>
 		<?= $this->Form->button('Resgister', ['class' => 'btn btn-primary']) ?>
 		<?= $this->Html->link('Login', ['controller' => 'Users', 'action' => 'login'] , ['class' => 'btn btn-info']) ?>
 		<?= $this->Form->end() ?>
