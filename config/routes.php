@@ -15,7 +15,7 @@ Router::scope('/', function (RouteBuilder $routes) {
 
     $routes->connect('/', ['controller' => 'Dashboard', 'action' => 'index', 'index']);
 
-    $routes->connect('home/', ['controller' => 'Pages', 'action' => 'display', 'home']);
+    $routes->connect('home/', ['controller' => 'Pages', 'action' => 'home', 'home']);
 
     $routes->connect('users/*', ['controller' => 'Users', 'action' => 'index', 'index']);
     $routes->connect('users/add', ['controller' => 'Users', 'action' => 'add', ]);
