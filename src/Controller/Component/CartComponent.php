@@ -68,14 +68,14 @@ class CartComponent extends Component
 	        }
 
 	       	$data = [
-	        	'product_id' => $id,
+	        	'product_id' => $product->id,
 	        	'name' => $product->name,
 	        	'image' => $product->image,
 	        	'price' => sprintf('%01.2f', $price),
 	        	'quantity' => $quantity,
 	        	'total' => sprintf('%01.2f', $price * $quantity),
 	        	];
-	        $this->request->session()->write('Cart.Orders' .$id, $data);
+	        $this->request->session()->write('Cart.Orders.' .$id, $data);
 	        $this->cart();
        }
 	}
@@ -85,8 +85,8 @@ class CartComponent extends Component
 	}
 
 	public function deletecart($id){
-		if($this->request->session()->read('Cart.Orders' . $id)) {
-            $product = $this->request->session()->read('Cart.Orders' . $id);
+		if($this->request->session()->read('Cart.Orders.' . $id)) {
+            $product = $this->request->session()->read('Cart.Orders.' . $id);
             $this->request->session()->delete('Cart.Orders.' . $id);
             $this->cart();
             return $product;

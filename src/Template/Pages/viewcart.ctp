@@ -1,8 +1,8 @@
  <div class="heading cf">
     <h1>My Cart</h1>
   </div>
-<?php if ($cart){ 
-        $total = '';
+<?php if ($cart){
+    $total = 0;
     ?>
 <div class="row">
         <div class="col-sm-12 col-md-10 col-md-offset-1">
@@ -18,6 +18,7 @@
                 </thead>
                 <tbody>
                     <?php foreach ($cart['Orders'] as $key => $cart):
+                        $total = $total + $cart['price'];
                         ?>
                     <tr>
                         <td class="col-sm-8 col-md-6">
@@ -30,11 +31,11 @@
                         <td class="col-sm-1 col-md-1" style="text-align: center">
                         <input type="email" class="form-control" id="exampleInputEmail1" value="<?= $cart['quantity'] ?>">
                         </td>
-                        <td class="col-sm-1 col-md-1 text-center"><strong><?= $cart['price'] ?></strong></td>
-                        <td class="col-sm-1 col-md-1 text-center"><strong><?= $cart['total'] ?></strong></td>
+                        <td class="col-sm-1 col-md-1 text-center"><strong><?= $this->Number->format($cart['price'], ['places' => 0,'after' => ' VND']);?></strong></td>
+                        <td class="col-sm-1 col-md-1 text-center"><strong><?= $this->Number->format($cart['total'], ['places' => 0,'after' => ' VND']);?></strong></td>
                         <td class="col-sm-1 col-md-1">
                             <a href="" class="btn btn-outline-info">Update</a>
-                            <a href="<?php echo $this->Url->build(['action'=>'deletecart', $key]) ?>" class="btn btn-danger">Remove</a>
+                              <div class="col-md-1 col-sm-1 col-12"><?php echo $this->Html->link('<i class="fa fa-trash"></i>', ['controller' => 'Pages', 'action' => 'deletecart', $cart['product_id']], ['class' => 'btn btn-secondary btn-sm', 'escape' => false]); ?></div>
                         </td>
                     </tr>
                     <?php endforeach; ?>
@@ -45,7 +46,7 @@
                         <td>   </td>
                         <td>   </td>
                         <td><h5>Subtotal<br>Estimated shipping</h5><h3>Total</h3></td>
-                        <td class="text-right"><h5><strong><?php $total ?><br>$6.94</strong></h5><h3>$31.53</h3></td>
+                        <td class="text-right"><h5><strong><?= $this->Number->format($total, ['places' => 0,'after' => ' VND']); ?><br><?= $this->Number->format('40000', ['places' => 0,'after' => ' VND']); ?></strong></h5><h3><?= $this->Number->format($total + 40000, ['places' => 0,'after' => ' VND']); ?></h3></td>
                     </tr>
                     <tr>
                         <td>   </td>

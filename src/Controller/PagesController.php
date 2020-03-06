@@ -18,13 +18,10 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
-<<<<<<< HEAD
-use Cake\Event\Event;
 
-=======
-use Cake\ORM\TableRegistry;
 use Cake\Event\Event;
->>>>>>> 6368ed3ad77cfc134f050ec4b33e64b2eae0dc89
+use Cake\ORM\TableRegistry;
+
 /**
  * Static content controller
  *
@@ -41,7 +38,7 @@ class PagesController extends AppController
     }
 
     public function beforeFilter(Event $event){
-        $this->Authentication->allowUnauthenticated(['home', 'viewcart','addcart','clear']);
+        $this->Authentication->allowUnauthenticated(['home', 'viewcart','addcart','clear','deletecart']);
 
     }
     /**
@@ -85,13 +82,14 @@ class PagesController extends AppController
 
     public function viewcart(){
         $cart = $this->Cart->cart();
+        debug($cart['Orders']);
         $this->set(compact('cart'));
     }
 
     public function deletecart($id = null){
         $cart = $this->Cart->deletecart($id);
          if(!empty($cart)) {
-            $this->Flash->error($cart['name'] . ' was removed from your shopping cart');
+            $this->Flash->error($cart->name . ' was removed from your shopping cart');
         }
         return $this->redirect(['action' => 'viewcart']);
     }

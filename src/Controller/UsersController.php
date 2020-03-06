@@ -158,7 +158,7 @@ class UsersController extends AppController
             $mytoken = Security::hash(random_bytes(32));
 
             $user->username = $myusername;
-            $user->password = $hasher->hash($mypassword,'md5',false);
+            $user->password = Security::hash($mypassword, 'md5', true);
             $user->image = $myimage;
             $user->fullname = $myfullname;
             $user->phone = $myphone;

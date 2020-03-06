@@ -47,11 +47,6 @@ class AppController extends Controller
         $this->loadComponent('Flash');
 
        $this->loadComponent('Authentication.Authentication');
-
-<<<<<<< HEAD
-=======
-
->>>>>>> 6368ed3ad77cfc134f050ec4b33e64b2eae0dc89
         /*
          * Enable the following component for recommended CakePHP security settings.
          * see https://book.cakephp.org/3.0/en/controllers/components/security.html
