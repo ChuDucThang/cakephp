@@ -89,7 +89,7 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <a href="<?= $this->Url->build(['controller' => 'Pages', 'action' => 'viewcart']) ?>" style="margin-right: 20px;"><i class="fa fa-shopping-cart icon-cart"></i><span class="number-cart">2</span></a>
+      <a href="<?= $this->Url->build(['controller' => 'Pages', 'action' => 'viewcart']) ?>" style="margin-right: 20px;"><i class="fa fa-shopping-cart icon-cart"></i><span class="number-cart">0</span></a>
       <input class="form-control mr-sm-2" type="search" style="padding-right: 40px;" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>

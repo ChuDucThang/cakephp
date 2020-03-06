@@ -34,9 +34,9 @@
             </a>
           </li>
           <li class="nav-item ">
-            <a class="nav-link" href="./icons.html">
+            <a class="nav-link" href="<?= $this->Url->build(['controller' => 'Orders','action' => 'index']); ?>">
               <i class="material-icons">bubble_chart</i>
-              <p>Customer</p>
+              <p>Order</p>
             </a>
           </li>
           <li class="nav-item ">

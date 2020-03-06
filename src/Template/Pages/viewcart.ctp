@@ -2,7 +2,7 @@
     <h1>My Cart</h1>
   </div>
 <?php if ($cart){ 
-        $total = '';
+        $total = 0;
     ?>
 <div class="row">
         <div class="col-sm-12 col-md-10 col-md-offset-1">
@@ -17,7 +17,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($cart['Orders'] as $key => $cart):
+                    <?php foreach ($cart['Ordersdetail'] as $key => $cart):
+                        $total = $total + $cart['total'];
                         ?>
                     <tr>
                         <td class="col-sm-8 col-md-6">
@@ -28,12 +29,15 @@
                             </div>
                         </div></td>
                         <td class="col-sm-1 col-md-1" style="text-align: center">
-                        <input type="email" class="form-control" id="exampleInputEmail1" value="<?= $cart['quantity'] ?>">
+                        <?= $this->Form->create(NULL, ['url' => ['controller' => 'Pages', 'action' => 'updatecart']]); ?>
+                        <?= $this->Form->input('id', ['type' => 'hidden', 'value' => $cart['product_id']]); ?>
+                        <?= $this->Form->input('quantity', ['label' => false, 'div' => false, 'class' => 'numeric form-control input-small', 'type' => 'tel', 'size'=> 2, 'min' => 1, 'max' => 99, 'maxlength' => 2, 'value' => $cart['quantity']]); ?>
                         </td>
-                        <td class="col-sm-1 col-md-1 text-center"><strong><?= $cart['price'] ?></strong></td>
-                        <td class="col-sm-1 col-md-1 text-center"><strong><?= $cart['total'] ?></strong></td>
+                        <td class="col-sm-1 col-md-1 text-center"><strong><?= $this->Number->format($cart['price'],['places'=>0, 'after'=>' VND']); ?></strong></td>
+                        <td class="col-sm-1 col-md-1 text-center"><strong><?= $this->Number->format($cart['total'],['places'=>0, 'after'=>' VND']);?></strong></td>
                         <td class="col-sm-1 col-md-1">
-                            <a href="" class="btn btn-outline-info">Update</a>
+                            <?php echo $this->Form->button('<i class="fa fa-calculator"></i> &nbsp; Update', ['class' => 'btn btn-outline-info btn-sm', 'type' =>'submit', 'escape' => false]);?>
+                            <?php echo $this->Form->end(); ?>
                             <a href="<?php echo $this->Url->build(['action'=>'deletecart', $key]) ?>" class="btn btn-danger">Remove</a>
                         </td>
                     </tr>
@@ -45,7 +49,7 @@
                         <td>   </td>
                         <td>   </td>
                         <td><h5>Subtotal<br>Estimated shipping</h5><h3>Total</h3></td>
-                        <td class="text-right"><h5><strong><?php $total ?><br>$6.94</strong></h5><h3>$31.53</h3></td>
+                        <td class="text-right"><h5><strong><?= $this->Number->format($total,['places'=>0, 'after'=>' VND']); ?><br><?= $this->Number->format(20000,['places'=>0, 'after'=>' VND']); ?></strong></h5><h3><?= $this->Number->format($total + 20000,['places'=>0, 'after'=>' VND']); ?></h3></td>
                     </tr>
                     <tr>
                         <td>   </td>
@@ -58,9 +62,8 @@
                             <span class="glyphicon glyphicon-shopping-cart"></span> Continue Shopping
                         </a></td>
                         <td>
-                        <button type="button" class="btn btn-success">
-                            Checkout <span class="glyphicon glyphicon-play"></span>
-                        </button></td>
+                             <?php echo $this->Html->link('<i class="fa fa-ban"></i> &nbsp; Checkout', ['controller' => 'Pages', 'action' => 'checkout'], ['class' => 'btn btn-success', 'escape' => false]); ?>
+                        </td>
                     </tr>
                 </tfoot>
             </table>
