@@ -24,12 +24,17 @@ class ProductsController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Categories'],
-        ];
-        $products = $this->paginate($this->Products);
+        if ($this->request->session()->read('Auth.level') == 1 || $this->request->session()->read('Auth.level') == 1) {
+            $this->paginate = [
+                'contain' => ['Categories'],
+            ];
+            $products = $this->paginate($this->Products);
 
-        $this->set(compact('products'));
+            $this->set(compact('products'));
+        }else{
+            $this->Flash->error(__('Ban khong co quyen truy cap.'));
+            return $this->redirect(['controller' => 'Dashboard', 'action' => 'index']);
+        }
     }
 
     /**

@@ -35,11 +35,14 @@ class PagesController extends AppController
     {
         parent::initialize();
         $this->loadComponent('Cart');
+        $this->loadModel('Products');
+        $this->loadModel('Orders');
+        $this->loadModel('Ordersdetail');
     }
 
     public function beforeFilter(Event $event){
-        $this->Authentication->allowUnauthenticated(['home', 'viewcart','addcart','clear','deletecart']);
-
+        $this->viewBuilder()->setLayout('default');
+        $this->Authentication->allowUnauthenticated(['home', 'viewcart','addcart','updatecart','deletecart','clear','checkout']);
     }
     /**
 
@@ -65,12 +68,11 @@ class PagesController extends AppController
     }
 
     public function addcart(){
-        $this->loadModel('Products');
         $id = $this->request->data['id'];
         $product = $this->Products->get($id, [
                 'contain' => []
             ]);
-        $quantity = 1;
+        $quantity = 1;;
         if(empty($product)) {
                 $this->Flash->error('Gio hang bi loi');
             } else {
@@ -94,9 +96,75 @@ class PagesController extends AppController
         return $this->redirect(['action' => 'viewcart']);
     }
 
+    public function updatecart(){
+        $id = $this->request->data['id'];
+        $product = $this->Products->get($id,[
+            'contain' => []
+        ]);
+        $quantity = isset($this->request->data['quantity']) ? $this->request->data['quantity'] : 1;
+        $this->Cart->updatecart($id,$quantity);
+        $this->Flash->success($product->name . ' updated quantity');
+        return $this->redirect(['action' => 'viewcart']);
+    }
+
     public function clear(){
         $this->Cart->deleteall();
         $this->Flash->success('Xóa hết giỏ hàng');
         return $this->redirect(['action' => 'home']);
+    }
+
+    public function checkout(){
+        $this->viewBuilder()->setLayout('checkout');
+        // view product
+        $cart = $this->Cart->cart();
+        $this->set(compact('cart'));
+
+        // // add order
+        $order = $this->Orders->newEntity();
+        // $order = $this->Ordersdetail->newEntity();
+        if ($this->request->is('post')) {
+            $order = $this->Orders->patchEntity($order, $this->request->getData());
+            $orderTable = TableRegistry::get('Ordersdetail');
+            $orderdetail = $orderTable->newEntity();
+
+               // foreach ($cart['Ordersdetail'] as $key => $cart) {
+               //     $myproduct_id = $cart['product_id'];
+               //     $myorder_id  = 1;
+               //     $myquantity = $cart['quantity'];
+               //     $myprice = $cart['price'];
+                
+               // }
+                // debug($orderdetail);
+            $orderdetail->product_id =7 ;
+            $orderdetail->order_id = 10;
+            $orderdetail->quantity = 40000;
+            $orderdetail->price = 40000;
+            $orderdetail->created_at = date('Y-m-d',time());
+            $orderdetail->updated_at = date('Y-m-d',time());
+
+                
+            if ($this->Orders->save($order)) {
+                // $this->Flash->success('Order successfull.');
+                // return $this->redirect(['action' => 'home']);
+                if ($orderTable->save($orderdetail)) {
+                    $this->Flash->success('Order successfull.');
+                    $this->redirect(['action' => 'home']);
+            //             $orderdetail->product_id = 1;
+            //             $orderdetail->order_id = $order->id;
+            //             $orderdetail->quantity = 40000;
+            //             $orderdetail->created_at = date('Y-m-d',time());
+            //             $orderdetail->updated_at = date('Y-m-d',time());
+            //          $this->Flash->success('Order successfull.');
+            //         return $this->redirect(['action' => 'home']);  
+                }else{
+                    $this->Flash->error('Orderdetail fail.'); 
+                }
+            //           $this->Flash->error('Order fail.');     
+            // }else{
+            }else{
+                $this->Flash->error('Order fail.');
+            }
+        }
+        $this->set(compact('order'));
     }
 }

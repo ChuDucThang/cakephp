@@ -64,6 +64,7 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
+            $user->password = Security::hash($this->request->getData('password'), 'md5',true);
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if ($this->request->session()->read('Auth.level') == 1) {
                 if ($this->Users->save($user)) {
@@ -158,7 +159,8 @@ class UsersController extends AppController
             $mytoken = Security::hash(random_bytes(32));
 
             $user->username = $myusername;
-            $user->password = Security::hash($mypassword, 'md5', true);
+
+            $user->password = Security::hash($mypassword,'md5', true);
             $user->image = $myimage;
             $user->fullname = $myfullname;
             $user->phone = $myphone;
@@ -209,12 +211,44 @@ class UsersController extends AppController
 
     public function forgotpassword(){
          $this->viewBuilder()->setLayout('login');
-         // if ($this->request->is('post') {
-         //     $myemail = $this->request->getData('email');
+         if ($this->request->is('post') ){
+            // set new pass
+            $mypassreset = random_int(100000, 999999);
+
+            $myemail = $this->request->getData('email');
+
+            $userTable = TableRegistry::get('Users');
+            $user = $userTable->find('all')->where(['email' => $myemail])->first();
+            $user->password = Security::hash($mypassreset,'md5',true);
+
+            if($userTable->save($user)){
+                $this->Flash->success('Successfull.');
+
+                TransportFactory::setConfig('gmail', [
+                    'host' => 'smtp.gmail.com',
+                    'port' => 587,
+                    'username' => 'my@gmail.com',
+                    'password' => 'secret',
+                    'className' => 'Smtp',
+                    'tls' => true
+                ]);
+
+                $email = new Email();
+                $email
+                ->emailFormat('html')
+                ->from('testemailsaishunkan@gmail.com','Admin')
+                ->subject('Please confirm your email to activition your account')
+                ->to($myemail)
+                ->send('Mat khau moi cua ban la ' .$mypassreset. ' Dung mat khau moi de dang nhap.');
+
+            }else{
+                $this->Flash->error('Fail.');
+            }
+
 
          //     $userTable = TableRegistry::get('Users');
          //     $user = $userTable->find('all')->where(['password' => $mypass])->first();
-         // }
+         }
     }
 
     public function profile(){

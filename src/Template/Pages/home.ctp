@@ -1,6 +1,5 @@
 <?= $this->Html->css('product.css') ?>
 <?php foreach ($product as $key => $p): ?>
-  <!-- <?php debug($p) ?> -->
 <div class="block">
   
   <div class="top text-center">
