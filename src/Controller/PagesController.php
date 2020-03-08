@@ -18,8 +18,10 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\View\Exception\MissingTemplateException;
-use Cake\ORM\TableRegistry;
+
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
+
 /**
  * Static content controller
  *
@@ -40,10 +42,14 @@ class PagesController extends AppController
 
     public function beforeFilter(Event $event){
         $this->viewBuilder()->setLayout('default');
-        $this->Authentication->allowUnauthenticated(['home', 'viewcart','addcart','updatecart','deletecart','clear','checkout']);
-
+        $this->Authentication->allowUnauthenticated(['home', 'viewcart','addcart','updatecart','deletecart','clear','checkout','search']);
     }
     /**
+
+
+    public function beforeFilter(Event $event){
+        $this->Authentication->allowUnauthenticated(['home']);
+    }
 
     /**
      * Displays a view
@@ -78,13 +84,14 @@ class PagesController extends AppController
 
     public function viewcart(){
         $cart = $this->Cart->cart();
+        // debug($cart['Orders']);
         $this->set(compact('cart'));
     }
 
     public function deletecart($id = null){
         $cart = $this->Cart->deletecart($id);
          if(!empty($cart)) {
-            $this->Flash->error($cart['name'] . ' was removed from your shopping cart');
+            $this->Flash->error($cart->name . ' was removed from your shopping cart');
         }
         return $this->redirect(['action' => 'viewcart']);
     }
@@ -117,47 +124,40 @@ class PagesController extends AppController
         // $order = $this->Ordersdetail->newEntity();
         if ($this->request->is('post')) {
             $order = $this->Orders->patchEntity($order, $this->request->getData());
-            $orderTable = TableRegistry::get('Ordersdetail');
-            $orderdetail = $orderTable->newEntity();
-
-               // foreach ($cart['Ordersdetail'] as $key => $cart) {
-               //     $myproduct_id = $cart['product_id'];
-               //     $myorder_id  = 1;
-               //     $myquantity = $cart['quantity'];
-               //     $myprice = $cart['price'];
-                
-               // }
-                // debug($orderdetail);
-            $orderdetail->product_id =7 ;
-            $orderdetail->order_id = 10;
-            $orderdetail->quantity = 40000;
-            $orderdetail->price = 40000;
-            $orderdetail->created_at = date('Y-m-d',time());
-            $orderdetail->updated_at = date('Y-m-d',time());
-
-                
+            $order->status = 0;            
             if ($this->Orders->save($order)) {
+                $ordersave = $this->Orders->find()->order(['id' => 'DESC'])->first();
                 // $this->Flash->success('Order successfull.');
                 // return $this->redirect(['action' => 'home']);
-                if ($orderTable->save($orderdetail)) {
-                    $this->Flash->success('Order successfull.');
-                    $this->redirect(['action' => 'home']);
-            //             $orderdetail->product_id = 1;
-            //             $orderdetail->order_id = $order->id;
-            //             $orderdetail->quantity = 40000;
-            //             $orderdetail->created_at = date('Y-m-d',time());
-            //             $orderdetail->updated_at = date('Y-m-d',time());
-            //          $this->Flash->success('Order successfull.');
-            //         return $this->redirect(['action' => 'home']);  
-                }else{
-                    $this->Flash->error('Orderdetail fail.'); 
-                }
-            //           $this->Flash->error('Order fail.');     
-            // }else{
+                foreach ($cart['Ordersdetail'] as $key => $value) {
+                   $orderTable = TableRegistry::get('Ordersdetail');
+                   $orderdetail = $orderTable->newEntity();
+                   $orderdetail->product_id = $value['product_id'];
+                   $orderdetail->order_id = $ordersave->id;
+                   $orderdetail->quantity = $value['quantity'];
+                   $orderdetail->price = $value['price'];
+                   $orderdetail->created_at = date('Y-m-d',time());
+                   $orderdetail->updated_at = date('Y-m-d',time());
+                   // echo $orderdetail;
+                   $this->Ordersdetail->save($orderdetail);
+                
+               }
+               $this->Flash->success('Order successfull');
+               return $this->redirect(['action'=>'home']);
+
             }else{
                 $this->Flash->error('Order fail.');
             }
         }
         $this->set(compact('order'));
+    }
+
+    public function search(){
+        $keyword = $this->request->getQuery('keyword');
+
+        $postdata = $this->paginate($this->Products->find()->where(function($exp, $query) use($keyword){
+            return $exp->like('name', '%' .$keyword. '%');
+        }));
+        $this->set(compact('postdata'));
     }
 }

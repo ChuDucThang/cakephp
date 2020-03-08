@@ -91,6 +91,10 @@ class OrdersTable extends Table
             ->scalar('note')
             ->maxLength('note', 4294967295)
             ->requirePresence('note', 'create');
+
+        $validator
+            ->requirePresence('status', 'create')
+            ->notEmptyString('status');
             
         return $validator;
     }

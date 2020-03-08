@@ -42,11 +42,14 @@ class OrdersController extends AppController
      */
     public function view($id = null)
     {
+        $this->loadModel('Ordersdetail');
         $order = $this->Orders->get($id, [
             'contain' => ['Ordersdetail'],
         ]);
+        $ordersdetail = $this->Ordersdetail->find('all')->where(['order_id' => $id])->all();
+        // dd($ordersdetail);
 
-        $this->set('order', $order);
+        $this->set(compact('order', 'ordersdetail'));
     }
 
     /**
@@ -111,5 +114,19 @@ class OrdersController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    public function confirm($id = null){
+        $order = $this->Orders->get($id, [
+            'contain' => [],
+        ]);
+        $order = $this->Orders->patchEntity($order, $this->request->getData());
+        $order->status = 1;
+        if ($this->Orders->save($order)) {
+                $this->Flash->success(__('Confirm successful.'));
+
+                return $this->redirect(['action' => 'index']);
+            }
+            $this->Flash->error(__('The order could not be confirm. Please, try again.'));
     }
 }
